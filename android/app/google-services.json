@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "5232096751",
+    "project_id": "friendsphere-90f90",
+    "storage_bucket": "friendsphere-90f90.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:5232096751:android:a74fac75f1210a631bb21a",
+        "android_client_info": {
+          "package_name": "com.example.friendsphere"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAe-U1sjFd_4b4g_xMW5YQq4Dt80E5fOCY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
