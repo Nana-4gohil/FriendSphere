@@ -3,10 +3,15 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:friendsphere/resources/auth_methods.dart';
+import 'package:friendsphere/responsive/responsive_layout.dart';
+import 'package:friendsphere/screens/login_screen.dart';
 import 'package:friendsphere/utils/colors.dart';
 import 'package:friendsphere/utils/utils.dart';
 import 'package:friendsphere/widgets/text_field_input.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:friendsphere/responsive/mobile_screen_layout.dart';
+import 'package:friendsphere/responsive/responsive_layout.dart';
+import 'package:friendsphere/responsive/web_screen_layout.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -21,6 +26,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
   Uint8List? _image;
+  bool _isloading = false;
 
   @override
   void dispose() {
@@ -37,6 +43,41 @@ class _SignupScreenState extends State<SignupScreen> {
     setState(() {
       _image = im;
     });
+  }
+
+  void singUp() async {
+    setState(() {
+      _isloading = true;
+    });
+    String res = await AuthMethods().SignUpUser(
+        email: _emailController.text,
+        password: _passwordController.text,
+        username: _usernameController.text,
+        bio: _bioController.text,
+        file: _image!);
+    if (res == "success") {
+      setState(() {
+        _isloading = false;
+      });
+      // navigate to the home screen
+      if (context.mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const ResponsiveLayout(
+                webScreenLayout: webScreenLayout(),
+                mobileScreenLayout: mobileScreenLayout()),
+          ),
+        );
+      }
+    } else {
+      setState(() {
+        _isloading = false;
+      });
+      // show the error
+      if (context.mounted) {
+        showSnackBar(context, res);
+      }
+    }
   }
 
   @override
@@ -66,8 +107,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   _image != null
                       ? CircleAvatar(
                           radius: 64,
-                      backgroundImage: MemoryImage(_image!),
-                      backgroundColor: Colors.red,
+                          backgroundImage: MemoryImage(_image!),
+                          backgroundColor: Colors.red,
                         )
                       : const CircleAvatar(
                           radius: 64,
@@ -78,7 +119,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     bottom: -10,
                     left: 80,
                     child: IconButton(
-                        onPressed: ()=>selectImage(),
+                        onPressed: () => selectImage(),
                         icon: const Icon(
                           Icons.add_a_photo,
                           size: 30,
@@ -119,19 +160,13 @@ class _SignupScreenState extends State<SignupScreen> {
                 height: 20.0,
               ),
               InkWell(
-                  onTap: () async {
-                    String res = await AuthMethods().SignUpUser(
-                        email: _emailController.text,
-                        password: _passwordController.text,
-                        username: _usernameController.text,
-                        bio: _bioController.text,
-                        file: _image!
-                    );
-
-                    print(res);
-                  },
+                  onTap: ()=>singUp(),
                   child: Container(
-                    child: const Text("Sign Up"),
+                    child: _isloading
+                        ? const CircularProgressIndicator(
+                            color: primaryColor,
+                          )
+                        : const Text("Sign Up"),
                     width: double.infinity,
                     alignment: Alignment.center,
                     padding: const EdgeInsets.symmetric(vertical: 12),
@@ -152,16 +187,19 @@ class _SignupScreenState extends State<SignupScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    child: Text("Don't have an account?"),
+                    child: Text("Already have an account?"),
                     padding: const EdgeInsets.symmetric(vertical: 8),
                   ),
                   const SizedBox(
                     width: 4,
                   ),
                   GestureDetector(
+                    onTap: ()=>Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context)=>const LoginScreen())
+                    ),
                     child: Container(
                       child: Text(
-                        "Sign Up",
+                        "LogIn",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),

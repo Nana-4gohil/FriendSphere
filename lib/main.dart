@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,8 @@ import 'package:friendsphere/responsive/web_screen_layout.dart';
 import 'package:friendsphere/utils/colors.dart';
 import 'package:friendsphere/screens/login_screen.dart';
 import 'package:friendsphere/screens/signup_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:friendsphere/providers/user_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,9 +28,7 @@ void main() async {
             appId: "1:5232096751:android:a74fac75f1210a631bb21a",
             messagingSenderId: "5232096751",
             projectId: "friendsphere-90f90",
-            storageBucket: "friendsphere-90f90.appspot.com"
-
-        ));
+            storageBucket: "friendsphere-90f90.appspot.com"));
   }
 
   runApp(const MyApp());
@@ -39,15 +40,38 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'FriendSphere',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark()
-          .copyWith(scaffoldBackgroundColor: mobileBackgroundColor),
-      home: SignupScreen(),
-    //   home: const ResponsiveLayout(
-    //       webScreenLayout: webScreenLayout(),
-    //       mobileScreenLayout: mobileScreenLayout()));
-     );
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => UserProvider(),),
+        ],
+
+     child:  MaterialApp(
+        title: 'FriendSphere',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData.dark()
+            .copyWith(scaffoldBackgroundColor: mobileBackgroundColor),
+        home: StreamBuilder(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot){
+              if (snapshot.connectionState == ConnectionState.active) {
+                if (snapshot.hasData) {
+                  return const ResponsiveLayout(
+                      webScreenLayout: webScreenLayout(),
+                      mobileScreenLayout: mobileScreenLayout());
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text("${snapshot.error}"),
+                  );
+                }
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                    child: CircularProgressIndicator(
+                  color: primaryColor,
+                ));
+              }
+              return const LoginScreen();
+
+            }))
+    );
   }
 }
