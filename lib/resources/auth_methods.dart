@@ -1,5 +1,8 @@
 import 'dart:typed_data';
-
+import 'package:cookie_jar/src/jar/persist.dart';
+import 'package:friendsphere/utils/utils.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:friendsphere/resources/storage_methods.dart';
@@ -8,12 +11,13 @@ import 'package:friendsphere/models/user.dart' as model;
 class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  Future<model.User> getUserDetails() async{
+  Future<model.User> getUserDetails() async {
     User currentUser = _auth.currentUser!;
-    DocumentSnapshot documentSnapshot = await
-        _firestore.collection('users').doc(currentUser.uid).get();
+    DocumentSnapshot documentSnapshot =
+        await _firestore.collection('users').doc(currentUser.uid).get();
     return model.User.fromSnap(documentSnapshot);
   }
+
   //signing up user
   Future<String> SignUpUser(
       {required String email,
@@ -40,9 +44,9 @@ class AuthMethods {
             bio: bio,
             following: [],
             followers: [],
-            photoUrl: photoUrl
-        );
+            photoUrl: photoUrl);
         await _firestore.collection("users").doc(cred.user!.uid).set(user.toJson());
+
         res = "success";
       }
     } catch (err) {
@@ -63,6 +67,8 @@ class AuthMethods {
       } else {
         res = "Please enter all the fields";
       }
+
+      res = "success";
     } catch (err) {
       res = err.toString();
     }
@@ -73,3 +79,4 @@ class AuthMethods {
     await _auth.signOut();
   }
 }
+

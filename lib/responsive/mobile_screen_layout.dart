@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:friendsphere/screens/login_screen.dart';
 import 'package:friendsphere/utils/colors.dart';
 import 'package:friendsphere/utils/global_variable.dart';
 
@@ -40,7 +41,7 @@ class _mobileScreenLayoutState extends State<mobileScreenLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
+      body:PageView(
         controller: pageController,
         onPageChanged: onPageChanged,
         children:HomeScreenItems,
