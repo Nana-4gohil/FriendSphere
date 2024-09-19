@@ -1,12 +1,12 @@
 class Post{
-  final String description;
-  final String uid;
-  final String username;
+  final String? description;
+  final String? uid;
+  final String? username;
   final likes;
   final DateTime datePublished;
-  final String profImage;
-  final String postUrl;
-  final String postId;
+  final String? profImage;
+  final String? postUrl;
+  final String? postId;
   const Post(
       {required this.description,
         required this.uid,

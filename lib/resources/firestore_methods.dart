@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:friendsphere/models/post.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:friendsphere/resources/storage_methods.dart';
@@ -15,7 +16,8 @@ class FireStoreMethods {
       String username, String profImage) async {
     String res = 'Some error occurred';
     try {
-      String? photoUrl = await StorageMethods().uploadImageToStorage('post', file, true);
+      String? photoUrl =
+          await StorageMethods().uploadImageToStorage('post', file, true);
       String postId = const Uuid().v1();
       Post post = Post(
         description: description,
@@ -28,24 +30,6 @@ class FireStoreMethods {
         profImage: profImage,
       );
       await _firestore.collection('posts').doc(postId).set(post.toJson());
-      final baseUrl = getBaseUrl();
-      final url = Uri.parse('$baseUrl/api/v1/posts/create');
-      final cookieHeader = await retrieveData('jwt');
-      print(cookieHeader);
-      final response = await http.post(url,
-          headers: {
-            "Content-Type": "application/json",
-            "Cookie": cookieHeader!
-          },
-          body: jsonEncode({'text': description, 'img': profImage}));
-
-      print(response.body);
-      if (response.statusCode == 200) {
-        Map<String, dynamic> data = jsonDecode(response.body);
-        print(data);
-      } else {
-        throw Exception(response.body);
-      }
       res = "success";
     } catch (err) {
       res = err.toString();
@@ -83,30 +67,58 @@ class FireStoreMethods {
     return res;
   }
 
-  Future<String> followUnfollowUser(String followId) async {
-    String res = "Some error occurred";
+  Future<void> followUser(String uid, String followId) async {
     try {
-      User loggedUser = _auth.currentUser!;
-      String userId = loggedUser.uid.toString();
       DocumentSnapshot snap =
-          await _firestore.collection('users').doc(userId).get();
+      await _firestore.collection('users').doc(uid).get();
       List following = (snap.data()! as dynamic)['following'];
+
       if (following.contains(followId)) {
-        await _firestore.collection('users').doc(userId).update({
+        await _firestore.collection('users').doc(followId).update({
+          'followers': FieldValue.arrayRemove([uid])
+        });
+
+        await _firestore.collection('users').doc(uid).update({
           'following': FieldValue.arrayRemove([followId])
         });
-        await _firestore.collection('users').doc(followId).update({
-          'followers': FieldValue.arrayRemove([userId])
-        });
       } else {
-        await _firestore.collection('users').doc(userId).update({
+        await _firestore.collection('users').doc(followId).update({
+          'followers': FieldValue.arrayUnion([uid])
+        });
+
+        await _firestore.collection('users').doc(uid).update({
           'following': FieldValue.arrayUnion([followId])
         });
-        await _firestore.collection('users').doc(followId).update({
-          'followers': FieldValue.arrayUnion([userId])
-        });
       }
-      res = "success";
+    } catch (e) {
+      if (kDebugMode) print(e.toString());
+    }
+  }
+
+  Future<String> postComment(String postId, String text, String uid,
+      String name, String profilePic) async {
+    String res = "Some error occurred";
+    try {
+      if (text.isNotEmpty) {
+        // if the likes list contains the user uid, we need to remove it
+        String commentId = const Uuid().v1();
+        _firestore
+            .collection('posts')
+            .doc(postId)
+            .collection('comments')
+            .doc(commentId)
+            .set({
+          'profilePic': profilePic,
+          'name': name,
+          'uid': uid,
+          'text': text,
+          'commentId': commentId,
+          'datePublished': DateTime.now(),
+        });
+        res = 'success';
+      } else {
+        res = "Please enter text";
+      }
     } catch (err) {
       res = err.toString();
     }

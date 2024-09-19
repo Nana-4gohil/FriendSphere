@@ -24,13 +24,7 @@ showSnackBar(BuildContext context, String text) {
     ),
   );
 }
-String getBaseUrl() {
-  if (kIsWeb) {
-    return 'http://localhost:8080';
-  } else{
-    return 'http://10.0.2.2:8080';
-  }
-}
+
 
 Future<void> storeData(String key, String value) async {
   final prefs = await SharedPreferences.getInstance();

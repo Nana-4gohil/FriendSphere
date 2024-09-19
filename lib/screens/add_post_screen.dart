@@ -62,6 +62,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
   }
 
   void postImage(String uid, String username, String profImage) async {
+    print("hell0");
     setState(() {
       _isLoading = true;
     });
@@ -105,6 +106,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
   @override
   Widget build(BuildContext context) {
     final UserProvider userProvider = Provider.of<UserProvider>(context);
+
     return _file == null
         ? Center(
             child: IconButton(
@@ -123,13 +125,13 @@ class _AddPostScreenState extends State<AddPostScreen> {
                   icon: Icon(Icons.arrow_back)),
               title: const Text('Post to'),
               actions: [
-                TextButton(
-                    onPressed: () => postImage(
+                GestureDetector(
+                    onTap: () => postImage(
                           userProvider.getUser.uid,
                           userProvider.getUser.username,
-                          userProvider.getUser.photoUrl,
+                          "https://m.media-amazon.com/images/I/71yc4G74FZL.jpg",
                         ),
-                    child: const Text(
+                    child: Text(
                       "Post",
                       style: TextStyle(
                         color: Colors.blueAccent,
@@ -151,8 +153,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                   children: [
                     CircleAvatar(
                       backgroundImage: NetworkImage(
-                          userProvider.getUser.photoUrl
-                      ),
+                          // userProvider.getUser.photoUrl!
+                          "https://m.media-amazon.com/images/I/71yc4G74FZL.jpg"),
                     ),
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.4,
