@@ -129,7 +129,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                     onTap: () => postImage(
                           userProvider.getUser.uid,
                           userProvider.getUser.username,
-                          "https://m.media-amazon.com/images/I/71yc4G74FZL.jpg",
+                          userProvider.getUser.photoUrl,
                         ),
                     child: Text(
                       "Post",
@@ -153,8 +153,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                   children: [
                     CircleAvatar(
                       backgroundImage: NetworkImage(
-                          // userProvider.getUser.photoUrl!
-                          "https://m.media-amazon.com/images/I/71yc4G74FZL.jpg"),
+                          userProvider.getUser.photoUrl),
+                          // "https://m.media-amazon.com/images/I/71yc4G74FZL.jpg"),
                     ),
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.4,

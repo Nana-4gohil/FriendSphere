@@ -44,16 +44,16 @@ class _mobileScreenLayoutState extends State<mobileScreenLayout> {
       body:PageView(
         controller: pageController,
         onPageChanged: onPageChanged,
-        children:HomeScreenItems,
+        children: HomeScreenItems,
         physics: const NeverScrollableScrollPhysics(),
       ),
       bottomNavigationBar: CupertinoTabBar(
-        backgroundColor: mobileBackgroundColor,
+        backgroundColor: barColor,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(
               Icons.home,
-              color: (_page == 0) ? primaryColor : secondaryColor,
+              color: (_page == 0) ? primaryColor : Colors.black,
             ),
             label: '',
             backgroundColor: primaryColor,
@@ -61,29 +61,23 @@ class _mobileScreenLayoutState extends State<mobileScreenLayout> {
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.search,
-                color: (_page == 1) ? primaryColor : secondaryColor,
+                color: (_page == 1) ? primaryColor : Colors.black,
               ),
               label: '',
-              backgroundColor: primaryColor),
+              backgroundColor: primaryColor
+          ),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.add_circle,
-                color: (_page == 2) ? primaryColor : secondaryColor,
+                color: (_page == 2) ? primaryColor : Colors.black,
               ),
               label: '',
-              backgroundColor: primaryColor),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.favorite,
-              color: (_page == 3) ? primaryColor : secondaryColor,
-            ),
-            label: '',
-            backgroundColor: primaryColor,
+              backgroundColor: primaryColor
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.person,
-              color: (_page == 4) ? primaryColor : secondaryColor,
+              color: (_page == 3) ? primaryColor : Colors.black,
             ),
             label: '',
             backgroundColor: primaryColor,
