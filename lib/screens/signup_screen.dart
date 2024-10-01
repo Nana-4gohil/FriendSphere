@@ -21,11 +21,14 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   Uint8List? _image;
+  // String? _errorMessage;
   bool _isloading = false;
 
   @override
@@ -35,6 +38,7 @@ class _SignupScreenState extends State<SignupScreen> {
     _passwordController.dispose();
     _bioController.dispose();
     _usernameController.dispose();
+    _nameController.dispose();
     super.dispose();
   }
 
@@ -51,6 +55,7 @@ class _SignupScreenState extends State<SignupScreen> {
     });
     String res = await AuthMethods().SignUpUser(
         email: _emailController.text,
+        name: _nameController.text,
         password: _passwordController.text,
         username: _usernameController.text,
         bio: _bioController.text,
@@ -80,136 +85,163 @@ class _SignupScreenState extends State<SignupScreen> {
     }
   }
 
+  Future<void> _selectImage(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: const Text('Select Image Source'),
+        children: <Widget>[
+          SimpleDialogOption(
+            padding: const EdgeInsets.all(20),
+            child: const Text('Take a photo'),
+            onPressed: () async {
+              Navigator.of(context).pop(); // Close the dialog
+              Uint8List? im = await pickImage(ImageSource.camera);
+              if (im != null) {
+                setState(() {
+                  _image = im;
+                });
+              }
+            },
+          ),
+          SimpleDialogOption(
+            padding: const EdgeInsets.all(20),
+            child: const Text('Choose from gallery'),
+            onPressed: () async {
+              Navigator.of(context).pop(); // Close the dialog
+              Uint8List? im = await pickImage(ImageSource.gallery);
+              if (im != null) {
+                setState(() {
+                  _image = im;
+                });
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 32),
-          width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Flexible(
-                child: Container(),
-                flex: 2,
-              ),
-              SvgPicture.asset(
-                'assets/ic_instagram.svg',
-                color: primaryColor,
-                height: 50,
-              ),
-              const SizedBox(
-                height: 30.0,
-              ),
-              Stack(
-                children: [
-                  _image != null
-                      ? CircleAvatar(
-                          radius: 64,
-                          backgroundImage: MemoryImage(_image!),
-                          backgroundColor: Colors.red,
-                        )
-                      : const CircleAvatar(
-                          radius: 64,
-                          backgroundImage: NetworkImage(
-                              'https://i.stack.imgur.com/l60Hf.png'),
-                          backgroundColor: Colors.red),
-                  Positioned(
-                    bottom: -10,
-                    left: 80,
-                    child: IconButton(
-                        onPressed: () => selectImage(),
-                        icon: const Icon(
-                          Icons.add_a_photo,
-                          size: 30,
-                        )),
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 24.0,
-              ),
-              TextFieldInput(
-                  textEditingController: _emailController,
-                  textInputType: TextInputType.emailAddress,
-                  hintText: "Enter your email"),
-              const SizedBox(
-                height: 20.0,
-              ),
-              TextFieldInput(
-                  textEditingController: _usernameController,
-                  textInputType: TextInputType.text,
-                  hintText: "Enter your username"),
-              const SizedBox(
-                height: 20.0,
-              ),
-              TextFieldInput(
-                  textEditingController: _bioController,
-                  textInputType: TextInputType.text,
-                  hintText: "Enter your bio"),
-              const SizedBox(
-                height: 20.0,
-              ),
-              TextFieldInput(
-                  textEditingController: _passwordController,
-                  textInputType: TextInputType.text,
-                  hintText: "Enter your password",
-                  isPass: true),
-              const SizedBox(
-                height: 20.0,
-              ),
-              InkWell(
-                  onTap: ()=>singUp(),
-                  child: Container(
-                    child: _isloading
-                        ? const CircularProgressIndicator(
-                            color: primaryColor,
-                          )
-                        : const Text("Sign Up"),
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    decoration: const ShapeDecoration(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(4))),
-                      color: blueColor,
-                    ),
-                  )),
-              const SizedBox(
-                height: 12,
-              ),
-              Flexible(
-                child: Container(),
-                flex: 2,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    child: Text("Already have an account?"),
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+      appBar: AppBar(
+        title: const Center(child: Text('Signup')),
+        backgroundColor: Colors.teal,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () => _selectImage(context),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.teal,
+                    radius: 60,
+                    backgroundImage: _image != null
+                        ? MemoryImage(_image!)
+                        : const NetworkImage('https://i.stack.imgur.com/l60Hf.png'),
+                    child: _image == null
+                        ? const Icon(Icons.account_circle, size: 60)
+                        : null,
                   ),
-                  const SizedBox(
-                    width: 4,
-                  ),
-                  GestureDetector(
-                    onTap: ()=>Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context)=>const LoginScreen())
-                    ),
-                    child: Container(
-                      child: Text(
-                        "LogIn",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(labelText: 'Name'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your name';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _usernameController,
+                  decoration: const InputDecoration(labelText: 'Username'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a username';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(labelText: 'Email'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter an email';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _passwordController,
+                  decoration: const InputDecoration(labelText: 'Password'),
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a password';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _bioController,
+                  decoration: const InputDecoration(labelText: 'Bio'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Bio is needed";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: 200,
+                  height: 50,
+                  child: ElevatedButton(
+
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        singUp();
+                      }
+                    },
+                    child: _isloading ? const CircularProgressIndicator() :  const Text(
+                      'Sign Up',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 8),
                     ),
-                  )
-                ],
-              )
-            ],
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      child: Text("Already have an account ?"),
+                    ),
+                    const SizedBox(width: 4),
+                    GestureDetector(
+                      onTap: ()=>Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context)=>const LoginScreen())
+                      ),
+                      child: const Text(
+                        "Login",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

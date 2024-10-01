@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 class FireStoreMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
   Future<String> createPost(String description, Uint8List file, String uid,
       String username, String profImage) async {
     String res = 'Some error occurred';

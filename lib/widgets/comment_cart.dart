@@ -67,29 +67,6 @@ class CommentCard extends StatelessWidget {
                 ],
               ),
             ),
-            // Like Button with Icon and Count
-            InkWell(
-              onTap: () {
-                // handle like functionality
-              },
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.favorite_border,
-                    size: 18,
-                    color: Colors.red,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    '12', // This can be a dynamic value for like count
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.black54,
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
       ),
