@@ -142,7 +142,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                   decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: Colors.teal,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: const Text(

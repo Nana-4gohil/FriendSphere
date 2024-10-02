@@ -182,7 +182,7 @@ class _PostCardState extends State<PostCard> {
                       });
                     },
                     child: const Icon(
-                      Icons.favorite,
+                      Icons.thumb_up,
                       color: Colors.white,
                       size: 100,
                     ),
@@ -199,8 +199,8 @@ class _PostCardState extends State<PostCard> {
                 smallLike: true,
                 child: IconButton(
                   icon: widget.snap['likes'].contains(user.uid)
-                      ? const Icon(Icons.favorite, color: Colors.red)
-                      : const Icon(Icons.favorite_border),
+                      ? const Icon(Icons.thumb_up, color: Colors.tealAccent)
+                      : const Icon(Icons.thumb_up_outlined),
                   onPressed: () => FireStoreMethods().likePost(
                     widget.snap['postId'].toString(),
                     user.uid,
@@ -274,8 +274,7 @@ class _PostCardState extends State<PostCard> {
                 Padding(
                   padding: const EdgeInsets.only(top: 4),
                   child: Text(
-                    DateFormat.yMMMd()
-                        .format(widget.snap['datePublished'].toDate()),
+                    getTimeDifference(widget.snap['datePublished']),
                     style: const TextStyle(color: secondaryColor, fontSize: 12),
                   ),
                 ),
