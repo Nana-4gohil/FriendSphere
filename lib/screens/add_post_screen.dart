@@ -115,7 +115,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
           )
         : Scaffold(
             appBar: AppBar(
-              backgroundColor: mobileBackgroundColor,
+              backgroundColor: Colors.teal,
               leading: IconButton(
                   onPressed: () {
                     setState(() {
@@ -134,7 +134,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                     child: Text(
                       "Post",
                       style: TextStyle(
-                        color: Colors.blueAccent,
+                        color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),

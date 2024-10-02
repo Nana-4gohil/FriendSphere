@@ -20,11 +20,11 @@ class _FeedScreenState extends State<FeedScreen> {
     return Scaffold(
       backgroundColor: width > webSreenSize ? webBackgroundColor : mobileBackgroundColor,
       appBar: width > webSreenSize ? null : AppBar(
-              backgroundColor: mobileBackgroundColor,
+              backgroundColor: Colors.teal,
               centerTitle: false,
               title: Image.asset(
-                'assets/logo.png',
-                height: 32,
+                'assets/logo-2.png',
+                height: 50,
               ),
             ),
       body: StreamBuilder(

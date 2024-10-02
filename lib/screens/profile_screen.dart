@@ -73,7 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           )
         : Scaffold(
             appBar: AppBar(
-              backgroundColor: mobileBackgroundColor,
+              backgroundColor: Colors.teal,
               title: Text(
                 userData['username'],
               ),
@@ -124,10 +124,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             widget.uid
                                         ? FollowButton(
                                             text: 'Sign Out',
-                                            backgroundColor:
-                                                mobileBackgroundColor,
+                                            backgroundColor: Colors.tealAccent,
 
-                                            textColor: primaryColor,
+                                            textColor: Colors.black,
                                             borderColor: Colors.grey,
                                             function: () async {
                                               await AuthMethods().singOut();
@@ -145,8 +144,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         : isFollowing
                                             ? FollowButton(
                                                 text: 'Unfollow',
-                                                backgroundColor: Colors.white,
-                                                textColor: Colors.black,
+                                                backgroundColor: Colors.teal,
+                                                textColor: Colors.white,
                                                 borderColor: Colors.grey,
                                                 function: () async {
                                                   await FireStoreMethods()
@@ -165,9 +164,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             : FollowButton(
                                                 text: 'Follow',
                                                 backgroundColor:
-                                                    Colors.blueAccent,
+                                                    Colors.teal,
                                                 textColor: Colors.white,
-                                                borderColor: Colors.blueAccent,
+                                                borderColor: Colors.tealAccent,
                                                 function: () async {
                                                   await FireStoreMethods()
                                                       .followUser(
@@ -228,12 +227,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     return GridView.builder(
                       shrinkWrap: true,
                       itemCount: (snapshot.data! as dynamic).docs.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 8,
-                        mainAxisSpacing: 8,
-                        childAspectRatio: 1,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 8,
+                          mainAxisSpacing: 8,
+                          childAspectRatio: 1,
                       ),
                       itemBuilder: (context, index) {
                         DocumentSnapshot snap =

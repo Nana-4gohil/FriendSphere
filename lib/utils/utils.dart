@@ -35,3 +35,16 @@ Future<String?> retrieveData(String key) async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.getString(key);
 }
+
+String getTimeDifference(datePublished) {
+  Duration difference = DateTime.now().difference(datePublished.toDate());
+  if (difference.inDays > 1) {
+    return '${difference.inDays} days ago';
+  } else if (difference.inHours > 1) {
+    return '${difference.inHours} hours ago';
+  } else if (difference.inMinutes > 1) {
+    return '${difference.inMinutes} minutes ago';
+  } else {
+    return 'Just now';
+  }
+}
