@@ -1,13 +1,9 @@
-import 'dart:convert';
-import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:friendsphere/models/post.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:friendsphere/resources/storage_methods.dart';
-import 'package:friendsphere/utils/utils.dart';
 import 'package:uuid/uuid.dart';
-import 'package:http/http.dart' as http;
 
 class FireStoreMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

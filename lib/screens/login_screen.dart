@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:friendsphere/resources/auth_methods.dart';
 import 'package:friendsphere/screens/signup_screen.dart';
-import 'package:friendsphere/utils/colors.dart';
 import 'package:friendsphere/utils/utils.dart';
-import 'package:friendsphere/widgets/text_field_input.dart';
 import 'package:friendsphere/responsive/mobile_screen_layout.dart';
 import 'package:friendsphere/responsive/responsive_layout.dart';
 import 'package:friendsphere/responsive/web_screen_layout.dart';
@@ -21,7 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String? _errorMessage;
-  bool _isloading = false;
+  bool _isLoading = false;
   @override
   void dispose() {
     // TODO: implement dispose
@@ -32,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void loginUser() async {
     setState(() {
-      _isloading = true;
+      _isLoading = true;
     });
     String res = await AuthMethods().loginUser(
         email: _emailController.text, password: _passwordController.text);
@@ -47,12 +44,12 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             (route) => false);
         setState(() {
-          _isloading = false;
+          _isLoading = false;
         });
       }
     } else {
       setState(() {
-        _isloading = false;
+        _isLoading = false;
       });
       if (context.mounted) {
         showSnackBar(context, res);
@@ -64,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
+        title: const Center(
             child: Text('Login')
         ),
         backgroundColor: Colors.teal,
@@ -78,11 +75,11 @@ class _LoginScreenState extends State<LoginScreen> {
               if (_errorMessage != null)
                 Text(
                   _errorMessage!,
-                  style: TextStyle(color: Colors.red),
+                  style: const TextStyle(color: Colors.red),
                 ),
               TextFormField(
                 controller: _emailController,
-                decoration: InputDecoration(labelText: 'Email'),
+                decoration: const InputDecoration(labelText: 'Email'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
@@ -92,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               TextFormField(
                 controller: _passwordController,
-                decoration: InputDecoration(labelText: 'Password'),
+                decoration: const InputDecoration(labelText: 'Password'),
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -101,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               SizedBox(
                 width: 200,
                 height: 50,
@@ -111,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       loginUser();
                     }
                   },
-                  child: _isloading ? const CircularProgressIndicator() : Text('Login',
+                  child: _isLoading ? const CircularProgressIndicator() : const Text('Login',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -122,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    child: Text("Don't have an account ?"),
+                    child: const Text("Don't have an account ?"),
                     padding: const EdgeInsets.symmetric(vertical: 8),
 
                   ),
@@ -132,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         MaterialPageRoute(builder: (context)=>const SignupScreen())
                     ),
                     child: Container(
-                      child: Text(
+                      child: const Text(
                         "Signup",
                         style: TextStyle(
                             fontWeight: FontWeight.bold

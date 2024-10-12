@@ -1,8 +1,6 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:friendsphere/resources/firestore_methods.dart';
-import 'package:friendsphere/utils/colors.dart';
 import 'package:friendsphere/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:friendsphere/providers/user_provider.dart';
@@ -62,7 +60,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
   }
 
   void postImage(String uid, String username, String profImage) async {
-    print("hell0");
     setState(() {
       _isLoading = true;
     });
@@ -131,7 +128,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                           userProvider.getUser.username,
                           userProvider.getUser.photoUrl,
                         ),
-                    child: Text(
+                    child: const Text(
                       "Post",
                       style: TextStyle(
                         color: Colors.white,
@@ -152,9 +149,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          userProvider.getUser.photoUrl),
-                          // "https://m.media-amazon.com/images/I/71yc4G74FZL.jpg"),
+                      backgroundImage:
+                          NetworkImage(userProvider.getUser.photoUrl),
+                      // "https://m.media-amazon.com/images/I/71yc4G74FZL.jpg"),
                     ),
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.4,

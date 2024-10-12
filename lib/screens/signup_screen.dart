@@ -1,16 +1,11 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:friendsphere/resources/auth_methods.dart';
 import 'package:friendsphere/responsive/responsive_layout.dart';
 import 'package:friendsphere/screens/login_screen.dart';
-import 'package:friendsphere/utils/colors.dart';
 import 'package:friendsphere/utils/utils.dart';
-import 'package:friendsphere/widgets/text_field_input.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:friendsphere/responsive/mobile_screen_layout.dart';
-import 'package:friendsphere/responsive/responsive_layout.dart';
 import 'package:friendsphere/responsive/web_screen_layout.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -28,8 +23,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   Uint8List? _image;
-  // String? _errorMessage;
-  bool _isloading = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -51,7 +45,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   void singUp() async {
     setState(() {
-      _isloading = true;
+      _isLoading = true;
     });
     String res = await AuthMethods().SignUpUser(
         email: _emailController.text,
@@ -62,7 +56,7 @@ class _SignupScreenState extends State<SignupScreen> {
         file: _image!);
     if (res == "success") {
       setState(() {
-        _isloading = false;
+        _isLoading = false;
       });
       // navigate to the home screen
       if (context.mounted) {
@@ -76,7 +70,7 @@ class _SignupScreenState extends State<SignupScreen> {
       }
     } else {
       setState(() {
-        _isloading = false;
+        _isLoading = false;
       });
       // show the error
       if (context.mounted) {
@@ -212,7 +206,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         singUp();
                       }
                     },
-                    child: _isloading ? const CircularProgressIndicator() :  const Text(
+                    child: _isLoading ? const CircularProgressIndicator() :  const Text(
                       'Sign Up',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,

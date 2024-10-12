@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class CommentCard extends StatelessWidget {
   final snap;
-  const CommentCard({Key? key, required this.snap}) : super(key: key);
+  const CommentCard({super.key, required this.snap});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +28,7 @@ class CommentCard extends StatelessWidget {
             CircleAvatar(
               backgroundImage: snap['profilePic'] != null
                   ? NetworkImage(snap['profilePic'])
-                  : AssetImage('assets/placeholder.png') as ImageProvider,
+                  : const AssetImage('assets/placeholder.png') as ImageProvider,
               radius: 22,
             ),
             const SizedBox(width: 16),
