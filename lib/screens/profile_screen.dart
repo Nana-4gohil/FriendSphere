@@ -1,17 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:friendsphere/resources/auth_methods.dart';
 import 'package:friendsphere/resources/firestore_methods.dart';
 import 'package:friendsphere/screens/login_screen.dart';
-import 'package:friendsphere/utils/colors.dart';
 import 'package:friendsphere/utils/utils.dart';
 import 'package:friendsphere/widgets/follow_button.dart';
+import 'package:friendsphere/screens/analysis_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String uid;
-  const ProfileScreen({Key? key, required this.uid}) : super(key: key);
+  const ProfileScreen({super.key, required this.uid});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -24,6 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int following = 0;
   bool isFollowing = false;
   bool isLoading = false;
+  bool isCurrentUser = false;
 
   @override
   void initState() {
@@ -43,13 +43,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       var postSnap = await FirebaseFirestore.instance
           .collection('posts')
-          .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('uid', isEqualTo: widget.uid)
           .get();
 
       postLen = postSnap.docs.length;
       userData = userSnap.data()!;
       followers = userSnap.data()!['followers'].length;
       following = userSnap.data()!['following'].length;
+
+      if (FirebaseAuth.instance.currentUser!.uid == widget.uid) {
+        setState(() {
+          isCurrentUser = true;
+        });
+      } else {
+        setState(() {
+          isCurrentUser = false;
+        });
+      }
+
       isFollowing = userSnap
           .data()!['followers']
           .contains(FirebaseAuth.instance.currentUser!.uid);
@@ -74,8 +85,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
         : Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.teal,
-              title: Text(
-                userData['username'],
+              title: Row(
+                children: [
+                  Text(
+                    userData['username'],
+                  ),
+                  const Spacer(), // Pushes the IconButton to the right
+                  if (isCurrentUser)
+                    IconButton(
+                      icon: const Icon(Icons.more_vert),
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (context) => Dialog(
+                          child: ListView(
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            children: [
+                              InkWell(
+                                onTap: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => AnalysisScreen(
+                                      uid: FirebaseAuth
+                                          .instance.currentUser!.uid,
+                                    ),
+                                  ),
+                                ),
+                                child: const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 12, horizontal: 16),
+                                  child: Text('View Data'),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
               ),
               centerTitle: false,
               elevation: 0,
@@ -118,14 +164,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                                 const SizedBox(height: 10),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     FirebaseAuth.instance.currentUser!.uid ==
                                             widget.uid
                                         ? FollowButton(
                                             text: 'Sign Out',
                                             backgroundColor: Colors.tealAccent,
-
                                             textColor: Colors.black,
                                             borderColor: Colors.grey,
                                             function: () async {
@@ -163,8 +209,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               )
                                             : FollowButton(
                                                 text: 'Follow',
-                                                backgroundColor:
-                                                    Colors.teal,
+                                                backgroundColor: Colors.teal,
                                                 textColor: Colors.white,
                                                 borderColor: Colors.tealAccent,
                                                 function: () async {
@@ -227,11 +272,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     return GridView.builder(
                       shrinkWrap: true,
                       itemCount: (snapshot.data! as dynamic).docs.length,
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 8,
-                          mainAxisSpacing: 8,
-                          childAspectRatio: 1,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 8,
+                        mainAxisSpacing: 8,
+                        childAspectRatio: 1,
                       ),
                       itemBuilder: (context, index) {
                         DocumentSnapshot snap =

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:friendsphere/screens/login_screen.dart';
 import 'package:friendsphere/utils/colors.dart';
 import 'package:friendsphere/utils/global_variable.dart';
 
